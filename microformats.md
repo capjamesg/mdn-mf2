@@ -10,6 +10,7 @@ tags:
   - Reference
   - SEO
   - Search
+
 ---
 
 [_Microformats_](https://microformats.org/) are standards used to embed semantics and structured data in HTML, and provide an API to be used by social web applications, search engines, aggregators, and other tools. These minimal patterns of HTML are used for marking up entities that range from fundamental to domain-specific information, such as people, organizations, events, and locations.
@@ -58,6 +59,7 @@ All microformats class names use prefixes. Prefixes are **syntax independent fro
   - [h-card](https://microformats.org/wiki/h-card) describes a person or organization
   - [h-entry](https://microformats.org/wiki/h-entry) describes episodic or date stamped online content like a blog post
   - [h-feed](https://microformats.org/wiki/h-feed) describes a stream or feed of posts
+  - [h-event](https://microformats.org/wiki/h-event) describes an event (i.e. a conference, community meetup, holiday)
   - You can find many more [vocabularies on the microformats2 wiki.](https://microformats.org/wiki/microformats2#v2_vocabularies)
 
 - **"p-\*" for plain (text) properties**, e.g. "p-name", "p-summary"
@@ -76,11 +78,18 @@ All microformats class names use prefixes. Prefixes are **syntax independent fro
 
 ## Some microformats examples
 
+Each example below contains:
+
+1. A description of a microformat.
+2. An example showing microformats applied to a HTML excerpt.
+3. A list of properties the microformat supports.
+4. A parsed example of the microformat represented using JSON.
+
 ### h-card
 
 The [h-card](https://microformats.org/wiki/h-card) microformat represents a person or organization.
 
-The value of each property is defined in HTML using the class property any element can carry
+The value of each property is defined in HTML using the class property any element can carry.
 
 #### Example h-card
 
@@ -95,16 +104,16 @@ The value of each property is defined in HTML using the class property any eleme
 </p>
 ```
 
-| Property               | Description                                                    |
-| ---------------------- | -------------------------------------------------------------- |
-| **`p-name`**           | The full/formatted name of the person or organization.         |
-| **`u-email`**          | email address                                                  |
-| **`u-photo`**          | a photo of the person or organization                          |
+| Property               | Description                                                  |
+| ---------------------- | ------------------------------------------------------------ |
+| **`p-name`**           | The full/formatted name of the person or organization.       |
+| **`u-email`**          | email address                                                |
+| **`u-photo`**          | a photo of the person or organization                        |
 | **`u-url`**            | home page or other URL representing the person or organization |
-| **`u-uid`**            | universally unique identifier, preferably canonical URL        |
-| **`p-street-address`** | street number + name                                           |
-| **`p-locality`**       | city/town/village                                              |
-| **`p-country-name`**   | country name                                                   |
+| **`u-uid`**            | universally unique identifier, preferably canonical URL      |
+| **`p-street-address`** | street number + name                                         |
+| **`p-locality`**       | city/town/village                                            |
+| **`p-country-name`**   | country name                                                 |
 
 #### Nested h-card example
 
@@ -192,6 +201,8 @@ Example h-entry as a blog post:
 </div>
 ```
 
+Parsed JSON:
+
 ```json
 {
   "items": [
@@ -228,7 +239,7 @@ Example h-entry as a blog post:
 
 ### h-feed
 
-The [h-feed](https://microformats.org/wiki/h-feed) is a stream or feed of [h-entry](https://microformats.org/wiki/h-entry) posts, like complete posts on a home page or archive pages, or summaries or other brief lists of posts.
+The [h-feed](https://microformats.org/wiki/h-feed) is a stream or feed of [h-entry](https://microformats.org/wiki/h-entry) posts, like complete posts on a home page or archive pages, or summaries or other brief lists of posts. h-feed lets you describe a feed in the same document website visitors will read, as opposed to RSS and Atom where you need to define a separate document for your content.
 
 #### Example h-feed
 
@@ -268,9 +279,71 @@ The [h-feed](https://microformats.org/wiki/h-feed) is a stream or feed of [h-ent
   </tbody>
 </table>
 
+#### Parsed h-feed example
+
+Parsed JSON:
+
+```JSON
+{
+    "items": [
+        {
+            "type": [
+                "h-feed"
+            ],
+            "properties": {
+                "name": [
+                    "Microformats Blogs"
+                ]
+            },
+            "children": [
+                {
+                    "type": [
+                        "h-entry"
+                    ],
+                    "properties": {
+                        "name": [
+                            "Microformats are amazing"
+                        ],
+                        "summary": [
+                            "In which I extoll the virtues of using microformats."
+                        ],
+                        "published": [
+                            "2013-06-13 12:00:00"
+                        ],
+                        "content": [
+                            {
+                                "html": "<p>Blah blah blah</p>",
+                                "value": "Blah blah blah"
+                            }
+                        ],
+                        "author": [
+                            {
+                                "type": [
+                                    "h-card"
+                                ],
+                                "properties": {
+                                    "name": [
+                                        "W. Developer"
+                                    ],
+                                    "url": [
+                                        "https://example.com"
+                                    ]
+                                },
+                                "value": "W. Developer"
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    ],
+```
+
 ### h-event
 
-The `h-event` is for events on the web. h-event is often used with both event listings and individual event pages.
+The `h-event` class is for events on the web. h-event is often used with both event listings and individual event pages. h-event data can be mapped to an iCalendar file to allow for subscribing to events described in a HTML document using h-event.
+
+#### Example h-event
 
 ```html
 <div class="h-event">
@@ -319,6 +392,8 @@ The `h-event` is for events on the web. h-event is often used with both event li
     </div>
 </div>
 ```
+
+Parsed JSON:
 
 ```json
 {
@@ -373,7 +448,7 @@ The `h-event` is for events on the web. h-event is often used with both event li
 
 ## Microformats rel property examples
 
-There are some microformats that are applied to a page by using a special `rel=` property. These microformats describe a relation between a current document and a linked document. For a full list of these, see the [rel property](https://microformats.org/wiki/rel-values) on the microformats wiki.
+There are some microformats that are applied to a page by using a special `rel=` property. These microformats describe a relation between a current document and a linked document. For a full list of these, see the official [rel property registry](http://microformats.org/wiki/rel-registrys) on the microformats wiki.
 
 ### rel=author
 
@@ -409,4 +484,4 @@ Supported in all browsers's support for the class attribute and its DOM API.
 - [Microformat](https://en.wikipedia.org/wiki/Microformat) on Wikipedia
 - [Microformats official website](https://microformats.org/)
 - [Search engines support](https://microformats.org/wiki/search_engines) on Microformats official website
-- [Microformats on IndieWebCamp](https://indieweb.org/microformats)
+- [Microformats on IndieWebCamp](
